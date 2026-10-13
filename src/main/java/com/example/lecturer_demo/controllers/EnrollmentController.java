@@ -1,6 +1,8 @@
 package com.example.lecturer_demo.controllers;
 
 import com.example.lecturer_demo.dto.ApiResponse;
+import com.example.lecturer_demo.dto.EnrollCourseRequest;
+import com.example.lecturer_demo.dto.EnrollmentDetail;
 import com.example.lecturer_demo.models.Enrollment;
 import com.example.lecturer_demo.services.EnrollmentService;
 import org.springframework.http.HttpStatus;
@@ -44,6 +46,16 @@ public class EnrollmentController {
             Enrollment created = enrollmentService.createEnrollment(enrollment);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new ApiResponse<>(true, "Đã tạo thanhf công", created));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(ApiResponse.error(e.getMessage()));
+        }
+    }
+    @PostMapping("/enroll-course")
+    public ResponseEntity<ApiResponse<EnrollmentDetail>> enrollCourse(@RequestBody EnrollCourseRequest request) {
+        try {
+            EnrollmentDetail detail = enrollmentService.enrollCourse(request);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ApiResponse<>(true, "Enroll course successfully", detail));
         } catch (RuntimeException e) {
             return ResponseEntity.status(400).body(ApiResponse.error(e.getMessage()));
         }
