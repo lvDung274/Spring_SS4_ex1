@@ -45,24 +45,19 @@ public class EnrollmentService {
     }
 
     public EnrollmentDetail enrollCourse(EnrollCourseRequest request) {
-        // 1. Kiểm tra Course có tồn tại hay không
         Course course = courseRepository.findById(request.getCourseId())
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+                .orElseThrow(() -> new RuntimeException("Khóa học không tìm thấy"));
 
-        // 2. Kiểm tra Course có ở trạng thái ACTIVE hay không
         if (!"ACTIVE".equalsIgnoreCase(course.getStatus())) {
-            throw new RuntimeException("Course is not active for enrollment");
+            throw new RuntimeException("Khóa học hiện không mở đăng ký");
         }
 
-        // 3. Kiểm tra Instructor của Course có tồn tại hay không
         instructorRepository.findById(course.getInstructorId())
-                .orElseThrow(() -> new RuntimeException("Instructor of this course not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy giảng viên của khóa học này."));
 
-        // 4. Tạo mới Enrollment và lưu trữ
         Enrollment newEnrollment = new Enrollment(request.getId(), request.getStudentName(), request.getCourseId());
         enrollmentRepository.create(newEnrollment);
 
-        // 5. Trả về kết quả dạng EnrollmentDetail
         return new EnrollmentDetail(newEnrollment.getId(), newEnrollment.getStudentName(), course);
     }
 }
