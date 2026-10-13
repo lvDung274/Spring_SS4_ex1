@@ -1,6 +1,7 @@
 package com.example.lecturer_demo.controllers;
 
 import com.example.lecturer_demo.dto.ApiResponse;
+import com.example.lecturer_demo.dto.InstructorDetailResponse;
 import com.example.lecturer_demo.models.Instructor;
 import com.example.lecturer_demo.services.InstructorService;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,15 @@ public class InstructorController {
             return ResponseEntity.ok(new ApiResponse<>(true, "Đã truy xuất thành công", instructor));
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
+        }
+    }
+    @GetMapping("/details-with-active-courses")
+    public ResponseEntity<ApiResponse<List<InstructorDetailResponse>>> getInstructorsWithFilteredCourses() {
+        try {
+            List<InstructorDetailResponse> result = instructorService.getInstructorsWithFilteredCourses();
+            return ResponseEntity.ok(new ApiResponse<>(true, "Đã lấy thông tin giảng viên cùng các khóa học đã được lọc thành công.", result));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(500).body(ApiResponse.error(e.getMessage()));
         }
     }
 
