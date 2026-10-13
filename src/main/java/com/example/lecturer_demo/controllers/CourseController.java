@@ -20,49 +20,55 @@ public class CourseController {
     }
     @GetMapping
     public ResponseEntity<ApiResponse<List<Course>>> getAllCourses() {
-        List<Course> courses = courseService.getAllCourses();
-        ApiResponse<List<Course>> response = new ApiResponse<>(true, "Lấy danh sách khóa học thành công", courses);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            List<Course> courses = courseService.getAllCourses();
+            return ResponseEntity.ok(new ApiResponse<>(true, "Đã truy xuất thành công", courses));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Course>> getCourseById(@PathVariable Long id) {
-        Course course = courseService.getCourseById(id);
-        if (course != null) {
-            ApiResponse<Course> response = new ApiResponse<>(true, "Lấy thông tin khóa học thành công", course);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            return ResponseEntity.ok(
+                    new ApiResponse<>(true, "Đã truy xuất thành công", courseService.getCourseById(id))
+            );
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404)
+                    .body(ApiResponse.error(e.getMessage())); //[cite: 4]
         }
-        ApiResponse<Course> response = new ApiResponse<>(false, "Không tìm thấy khóa học", null);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<Course>> createCourse(@RequestBody Course course) {
-        Course created = courseService.createCourse(course);
-        ApiResponse<Course> response = new ApiResponse<>(true, "Tạo mới khóa học thành công", created);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        try {
+            Course created = courseService.createCourse(course);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ApiResponse<>(true, "Tạo thành công", created));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(ApiResponse.error(e.getMessage()));
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Course>> updateCourse(@PathVariable Long id, @RequestBody Course course) {
-        Course updated = courseService.updateCourse(id, course);
-        if (updated != null) {
-            ApiResponse<Course> response = new ApiResponse<>(true, "Cập nhật khóa học thành công", updated);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            Course updated = courseService.updateCourse(id, course);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Cập nhập thành công", updated));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
         }
-        ApiResponse<Course> response = new ApiResponse<>(false, "Không tìm thấy khóa học để cập nhật", null);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Course>> deleteCourseById(@PathVariable Long id) {
-        Course deleted = courseService.deleteCourseById(id);
-        if (deleted != null) {
-            ApiResponse<Course> response = new ApiResponse<>(true, "Xóa khóa học thành công", deleted);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            Course deleted = courseService.deleteCourseById(id);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Xóa thành công", deleted));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
         }
-        ApiResponse<Course> response = new ApiResponse<>(false, "Không tìm thấy khóa học để xóa", null);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
 }

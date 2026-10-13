@@ -21,7 +21,7 @@ public class InstructorRepository {
         return instructors;
     }
 
-    public Optional<Instructor> findById(Long id) {
+    public Optional<Instructor> findById(long id) {
         return instructors.stream().filter(i -> i.getId().equals(id)).findFirst();
     }
 
@@ -30,25 +30,19 @@ public class InstructorRepository {
         return instructor;
     }
 
-    public Instructor update(Long id, Instructor updatedInstructor) {
-        Optional<Instructor> existing = findById(id);
-        if (existing.isPresent()) {
-            Instructor instructor = existing.get();
-            instructor.setName(updatedInstructor.getName());
-            instructor.setEmail(updatedInstructor.getEmail());
-            return instructor;
-        }
-        return null;
+    public Instructor update(long id, Instructor updatedInstructor) {
+        Instructor existing = findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy giảng viên"));
+        existing.setName(updatedInstructor.getName());
+        existing.setEmail(updatedInstructor.getEmail());
+        return existing;
     }
 
-    public Instructor deleteById(Long id) {
-        Optional<Instructor> existing = findById(id);
-        if (existing.isPresent()) {
-            Instructor instructor = existing.get();
-            instructors.remove(instructor);
-            return instructor;
-        }
-        return null;
+    public Instructor deleteById(long id) {
+        Instructor existing = findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy giảng viên"));
+        instructors.remove(existing);
+        return existing;
     }
 
 }

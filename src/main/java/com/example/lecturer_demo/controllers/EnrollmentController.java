@@ -20,49 +20,52 @@ public class EnrollmentController {
     }
     @GetMapping
     public ResponseEntity<ApiResponse<List<Enrollment>>> getAllEnrollments() {
-        List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
-        ApiResponse<List<Enrollment>> response = new ApiResponse<>(true, "Lấy danh sách đăng ký thành công", enrollments);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
+            return ResponseEntity.ok(new ApiResponse<>(true, "Đã truy xuất thành công", enrollments));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Enrollment>> getEnrollmentById(@PathVariable Long id) {
-        Enrollment enrollment = enrollmentService.getEnrollmentById(id);
-        if (enrollment != null) {
-            ApiResponse<Enrollment> response = new ApiResponse<>(true, "Lấy thông tin đăng ký thành công", enrollment);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<ApiResponse<Enrollment>> getEnrollmentById(@PathVariable long id) {
+        try {
+            Enrollment enrollment = enrollmentService.getEnrollmentById(id);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Đã truy xuất thành công", enrollment));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
         }
-        ApiResponse<Enrollment> response = new ApiResponse<>(false, "Không tìm thấy thông tin đăng ký", null);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<Enrollment>> createEnrollment(@RequestBody Enrollment enrollment) {
-        Enrollment created = enrollmentService.createEnrollment(enrollment);
-        ApiResponse<Enrollment> response = new ApiResponse<>(true, "Tạo mới lượt đăng ký thành công", created);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        try {
+            Enrollment created = enrollmentService.createEnrollment(enrollment);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ApiResponse<>(true, "Đã tạo thanhf công", created));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(ApiResponse.error(e.getMessage()));
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Enrollment>> updateEnrollment(@PathVariable Long id, @RequestBody Enrollment enrollment) {
-        Enrollment updated = enrollmentService.updateEnrollment(id, enrollment);
-        if (updated != null) {
-            ApiResponse<Enrollment> response = new ApiResponse<>(true, "Cập nhật lượt đăng ký thành công", updated);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<ApiResponse<Enrollment>> updateEnrollment(@PathVariable long id, @RequestBody Enrollment enrollment) {
+        try {
+            Enrollment updated = enrollmentService.updateEnrollment(id, enrollment);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Cập nhập ok", updated));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
         }
-        ApiResponse<Enrollment> response = new ApiResponse<>(false, "Không tìm thấy lượt đăng ký để cập nhật", null);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Enrollment>> deleteEnrollmentById(@PathVariable Long id) {
-        Enrollment deleted = enrollmentService.deleteEnrollmentById(id);
-        if (deleted != null) {
-            ApiResponse<Enrollment> response = new ApiResponse<>(true, "Xóa lượt đăng ký thành công", deleted);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<ApiResponse<Enrollment>> deleteEnrollmentById(@PathVariable long id) {
+        try {
+            Enrollment deleted = enrollmentService.deleteEnrollmentById(id);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Xóa ok", deleted));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
         }
-        ApiResponse<Enrollment> response = new ApiResponse<>(false, "Không tìm thấy lượt đăng ký để xóa", null);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
-
 }

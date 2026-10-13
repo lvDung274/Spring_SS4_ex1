@@ -20,7 +20,7 @@ public class EnrollmentRepository {
     public List<Enrollment> findAll() {
         return enrollments;
     }
-    public Optional<Enrollment> findById(Long id) {
+    public Optional<Enrollment> findById(long id) {
         return enrollments.stream().filter(e -> e.getId().equals(id)).findFirst();
     }
 
@@ -29,24 +29,18 @@ public class EnrollmentRepository {
         return enrollment;
     }
 
-    public Enrollment update(Long id, Enrollment updatedEnrollment) {
-        Optional<Enrollment> existing = findById(id);
-        if (existing.isPresent()) {
-            Enrollment enrollment = existing.get();
-            enrollment.setStudentName(updatedEnrollment.getStudentName());
-            enrollment.setCourseId(updatedEnrollment.getCourseId());
-            return enrollment;
-        }
-        return null;
+    public Enrollment update(long id, Enrollment updatedEnrollment) {
+        Enrollment existing = findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thông tin đăng ký"));
+        existing.setStudentName(updatedEnrollment.getStudentName());
+        existing.setCourseId(updatedEnrollment.getCourseId());
+        return existing;
     }
 
-    public Enrollment deleteById(Long id) {
-        Optional<Enrollment> existing = findById(id);
-        if (existing.isPresent()) {
-            Enrollment enrollment = existing.get();
-            enrollments.remove(enrollment);
-            return enrollment;
-        }
-        return null;
+    public Enrollment deleteById(long id) {
+        Enrollment existing = findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thông tin đăng ký"));
+        enrollments.remove(existing);
+        return existing;
     }
 }

@@ -21,48 +21,52 @@ public class InstructorController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<Instructor>>> getAllInstructors() {
-        List<Instructor> instructors = instructorService.getAllInstructors();
-        ApiResponse<List<Instructor>> response = new ApiResponse<>(true, "Lấy danh sách giảng viên thành công", instructors);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            List<Instructor> instructors = instructorService.getAllInstructors();
+            return ResponseEntity.ok(new ApiResponse<>(true, "Fetched Successfully", instructors));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Instructor>> getInstructorById(@PathVariable Long id) {
-        Instructor instructor = instructorService.getInstructorById(id);
-        if (instructor != null) {
-            ApiResponse<Instructor> response = new ApiResponse<>(true, "Lấy thông tin giảng viên thành công", instructor);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<ApiResponse<Instructor>> getInstructorById(@PathVariable long id) {
+        try {
+            Instructor instructor = instructorService.getInstructorById(id);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Đã truy xuất thành công", instructor));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
         }
-        ApiResponse<Instructor> response = new ApiResponse<>(false, "Không tìm thấy giảng viên", null);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<Instructor>> createInstructor(@RequestBody Instructor instructor) {
-        Instructor created = instructorService.createInstructor(instructor);
-        ApiResponse<Instructor> response = new ApiResponse<>(true, "Tạo mới giảng viên thành công", created);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        try {
+            Instructor created = instructorService.createInstructor(instructor);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ApiResponse<>(true, "Đã truy xuất thành công", created));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(ApiResponse.error(e.getMessage()));
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Instructor>> updateInstructor(@PathVariable Long id, @RequestBody Instructor instructor) {
-        Instructor updated = instructorService.updateInstructor(id, instructor);
-        if (updated != null) {
-            ApiResponse<Instructor> response = new ApiResponse<>(true, "Cập nhật giảng viên thành công", updated);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<ApiResponse<Instructor>> updateInstructor(@PathVariable long id, @RequestBody Instructor instructor) {
+        try {
+            Instructor updated = instructorService.updateInstructor(id, instructor);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Cập nhập ok", updated));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
         }
-        ApiResponse<Instructor> response = new ApiResponse<>(false, "Không tìm thấy giảng viên để cập nhật", null);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Instructor>> deleteInstructorById(@PathVariable Long id) {
-        Instructor deleted = instructorService.deleteInstructorById(id);
-        if (deleted != null) {
-            ApiResponse<Instructor> response = new ApiResponse<>(true, "Xóa giảng viên thành công", deleted);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<ApiResponse<Instructor>> deleteInstructorById(@PathVariable long id) {
+        try {
+            Instructor deleted = instructorService.deleteInstructorById(id);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Xóa ok", deleted));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
         }
-        ApiResponse<Instructor> response = new ApiResponse<>(false, "Không tìm thấy giảng viên để xóa", null);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

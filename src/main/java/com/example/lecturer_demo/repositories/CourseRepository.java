@@ -29,24 +29,18 @@ public class CourseRepository {
     }
 
     public Course update(Long id, Course updatedCourse) {
-        Optional<Course> existing = findById(id);
-        if (existing.isPresent()) {
-            Course course = existing.get();
-            course.setTitle(updatedCourse.getTitle());
-            course.setStatus(updatedCourse.getStatus());
-            course.setInstructorId(updatedCourse.getInstructorId());
-            return course;
-        }
-        return null;
+        Course existing = findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy khóa học"));
+        existing.setTitle(updatedCourse.getTitle());
+        existing.setStatus(updatedCourse.getStatus());
+        existing.setInstructorId(updatedCourse.getInstructorId());
+        return existing;
     }
 
     public Course deleteById(Long id) {
-        Optional<Course> existing = findById(id);
-        if (existing.isPresent()) {
-            Course course = existing.get();
-            courses.remove(course);
-            return course;
-        }
-        return null;
+        Course existing = findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy khóa học"));
+        courses.remove(existing);
+        return existing;
     }
 }

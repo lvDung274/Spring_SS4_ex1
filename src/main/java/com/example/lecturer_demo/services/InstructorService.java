@@ -19,19 +19,20 @@ public class InstructorService {
    public List<Instructor> getAllInstructors() {
        return instructorRepository.findAll();
    }
-    public Instructor getInstructorById(Long id) {
-        return instructorRepository.findById(id).orElse(null);
+    public Instructor getInstructorById(long id) {
+        return instructorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy giảng viên"));
     }
 
     public Instructor createInstructor(Instructor instructor) {
         return instructorRepository.create(instructor);
     }
 
-    public Instructor updateInstructor(Long id, Instructor instructor) {
+    public Instructor updateInstructor(long id, Instructor instructor) {
         return instructorRepository.update(id, instructor);
     }
 
-    public Instructor deleteInstructorById(Long id) {
+    public Instructor deleteInstructorById(long id) {
         return instructorRepository.deleteById(id);
     }
 }

@@ -19,7 +19,8 @@ public class CourseService {
         return courseRepository.findAll();
     }
     public Course getCourseById(Long id) {
-        return courseRepository.findById(id).orElse(null);
+        return courseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy khóa học"));
     }
 
     public Course createCourse(Course course) {
