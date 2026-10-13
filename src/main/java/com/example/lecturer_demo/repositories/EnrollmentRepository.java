@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class EnrollmentRepository {
@@ -18,5 +19,34 @@ public class EnrollmentRepository {
     );
     public List<Enrollment> findAll() {
         return enrollments;
+    }
+    public Optional<Enrollment> findById(Long id) {
+        return enrollments.stream().filter(e -> e.getId().equals(id)).findFirst();
+    }
+
+    public Enrollment create(Enrollment enrollment) {
+        enrollments.add(enrollment);
+        return enrollment;
+    }
+
+    public Enrollment update(Long id, Enrollment updatedEnrollment) {
+        Optional<Enrollment> existing = findById(id);
+        if (existing.isPresent()) {
+            Enrollment enrollment = existing.get();
+            enrollment.setStudentName(updatedEnrollment.getStudentName());
+            enrollment.setCourseId(updatedEnrollment.getCourseId());
+            return enrollment;
+        }
+        return null;
+    }
+
+    public Enrollment deleteById(Long id) {
+        Optional<Enrollment> existing = findById(id);
+        if (existing.isPresent()) {
+            Enrollment enrollment = existing.get();
+            enrollments.remove(enrollment);
+            return enrollment;
+        }
+        return null;
     }
 }

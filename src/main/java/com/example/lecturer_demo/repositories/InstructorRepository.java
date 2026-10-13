@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class InstructorRepository {
@@ -18,6 +19,36 @@ public class InstructorRepository {
     );
     public List<Instructor> findAll() {
         return instructors;
+    }
+
+    public Optional<Instructor> findById(Long id) {
+        return instructors.stream().filter(i -> i.getId().equals(id)).findFirst();
+    }
+
+    public Instructor create(Instructor instructor) {
+        instructors.add(instructor);
+        return instructor;
+    }
+
+    public Instructor update(Long id, Instructor updatedInstructor) {
+        Optional<Instructor> existing = findById(id);
+        if (existing.isPresent()) {
+            Instructor instructor = existing.get();
+            instructor.setName(updatedInstructor.getName());
+            instructor.setEmail(updatedInstructor.getEmail());
+            return instructor;
+        }
+        return null;
+    }
+
+    public Instructor deleteById(Long id) {
+        Optional<Instructor> existing = findById(id);
+        if (existing.isPresent()) {
+            Instructor instructor = existing.get();
+            instructors.remove(instructor);
+            return instructor;
+        }
+        return null;
     }
 
 }
