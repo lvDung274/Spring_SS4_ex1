@@ -48,7 +48,7 @@ public class EnrollmentService {
         Course course = courseRepository.findById(request.getCourseId())
                 .orElseThrow(() -> new RuntimeException("Khóa học không tìm thấy"));
 
-        if (!"ACTIVE".equalsIgnoreCase(course.getStatus())) {
+        if (!"ACTIVE".equalsIgnoreCase(course.getStatus().name())) {
             throw new RuntimeException("Khóa học hiện không mở đăng ký");
         }
 

@@ -27,6 +27,19 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Spring Boot Starter Web (dùng để xây dựng RESTful APIs)
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // PostgreSQL Driver (thư viện kết nối tới cơ sở dữ liệu PostgreSQL)
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Test dependencies (thường có sẵn)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
 }
 
 tasks.named('test') {

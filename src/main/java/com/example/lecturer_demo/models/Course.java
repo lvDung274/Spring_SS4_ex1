@@ -1,17 +1,28 @@
 package com.example.lecturer_demo.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "courses", schema = "public")
+@Entity
+@Builder
 public class Course {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String title;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private CourseStatus status; //Đổi kiểu từ String sang CourseStatus
+
+
+    @Column( nullable = false)
     private Long instructorId;
 }
